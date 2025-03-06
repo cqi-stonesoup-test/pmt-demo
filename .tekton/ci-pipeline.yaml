@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: ci-pipeline
+spec:
+  tasks:
+  - name: clone
+    params:
+    - name: url
+      value: "https://github.com/konflux-ci/pipeline-migration-tool"
+    taskRef:
+      params:
+      - name: name
+        value: clone
+      - name: bundle
+        value: quay.io/mytestworkload/build-definitions-test/task-clone:0.2@sha256:ae3d50ab78b21bddd6582daa4dd266c8d4bfab2f8fcf0f259318049f859845c9
+      - name: kind
+        value: task
+      resolver: bundles
+  - name: lint
+    taskRef:
+      params:
+      - name: name
+        value: lint
+      - name: bundle
+        value: quay.io/mytestworkload/build-definitions-test/task-lint:0.2@sha256:7c35dfac0a1fdc3712dea2ca3ebf698d57aca7f5a76dbe5439707e0c5b89c0a1
+      - name: kind
+        value: task
+      resolver: bundles
+    params:
+    - name: verbosity
+      value: -vv
+    runAfter:
+    - clone

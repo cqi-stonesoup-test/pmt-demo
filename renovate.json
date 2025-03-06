@@ -1,0 +1,5 @@
+{
+        "tekton": {
+                "schedule": ["at any time"]
+        }
+}
